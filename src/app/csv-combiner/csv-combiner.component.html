@@ -1,0 +1,14 @@
+<!-- csv-combiner.component.html -->
+
+<div>
+    <h2>CSV Combiner</h2>
+    <label for="fileInput">Select CSV files:</label>
+    <input type="file" id="fileInput" (change)="onFileChange($event)" multiple>
+  
+    <button (click)="mergeCSVFiles()">Merge CSV Files</button>
+  
+    <div *ngIf="mergedFilePath">
+      <p>Merged CSV file saved at: {{ mergedFilePath }}</p>
+    </div>
+  </div>
+  

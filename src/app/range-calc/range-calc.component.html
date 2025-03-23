@@ -1,0 +1,74 @@
+<h2>Range calculator</h2>
+
+<!-- Instrument Dropdown -->
+<label for="instrument">Select Instrument:</label>
+<select id="instrument" [(ngModel)]="selectedInstrument" (change)="onInstrumentChange()">
+  <option value="OPTIDX">OPTIDX</option>
+  <option value="OPTSTK">OPTSTK</option>
+  <option value="FUTSTK">FUTSTK</option>
+  <option value="FUTIDX">FUTIDX</option>
+</select>
+
+<!-- Symbol Dropdown -->
+<label for="symbol">Select Symbol:</label>
+<select id="symbol" [(ngModel)]="selectedSymbol" (change)="onSymbolChange()">
+  <option *ngFor="let symbol of symbols" [value]="symbol">{{ symbol }}</option>
+</select>
+
+<!-- Date Option Dropdown (as per your existing code) -->
+<label for="dateOption">Select Date Option:</label>
+<select id="dateOption" [(ngModel)]="selectedDateOption" (change)="onDateOptionChange()">
+  <option value="1">Today</option>
+  <option value="2">Specific Date</option>
+  <option value="3">Last N Days</option>
+  <option value="4">Date Range</option>
+  <option value="5">Custom Date Range</option>
+  <option value="6">Yesterday</option>
+</select>
+
+<!-- Additional Date Selection Fields -->
+<div *ngIf="selectedDateOption == '2'">
+  <label for="specificDate">Select Specific Date:</label>
+  <input type="date" id="specificDate" [(ngModel)]="specificDate" (change)="onSpecificDateChange()">
+</div>
+
+<div *ngIf="selectedDateOption == '3'">
+  <label for="numDays">Last N Days:</label>
+  <input type="number" id="numDays" [(ngModel)]="lastNDays" (change)="onLastNDaysChange()">
+</div>
+
+<div *ngIf="selectedDateOption == '4' || selectedDateOption == '5'">
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate">
+  <label for="endDate">End Date:</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate">
+</div>
+
+<!-- Display Selected Data Columns -->
+<div *ngIf="selectedInstrument && selectedSymbol">
+  <!-- Display EXPIRY_DT column -->
+  <p>EXPIRY_DT: {{ expiryDate || '0' }}</p>
+
+  <!-- Display OPTION_TYP column for OPTSTK and OPTIDX -->
+  <p>OPTION_TYP: {{ optionType || 'XX' }}</p>
+
+  <!-- Display other data columns -->
+  <p>OPEN: {{ open }}</p>
+  <p>HIGH: {{ high }}</p>
+  <p>LOW: {{ low }}</p>
+  <p>CLOSE: {{ close }}</p>
+  <p>SETTLE_PR: {{ settlePr }}</p>
+  <p>CONTRACTS: {{ contracts }}</p>
+  <p>VAL_INLAKH: {{ valInLakh }}</p>
+  <p>OPEN_INT: {{ openInt }}</p>
+  <p>CHG_IN_OI: {{ chgInOi }}</p>
+  <!-- Add other columns as needed -->
+</div>
+
+<!-- Loading Indicator (as per your existing code) -->
+<div *ngIf="isLoading">
+  <p>Loading...</p>
+</div>
+
+<!-- Button to trigger API call -->
+<button (click)="getData()">Get Data</button>

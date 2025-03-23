@@ -1,40 +1,77 @@
-<div class="section">
-    <h2>Index Data</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Index Name</th>
-          <th>Index Date</th>
-          <th>Open Index Value</th>
-          <th>High Index Value</th>
-          <th>Low Index Value</th>
-          <th>Closing Index Value</th>
-          <th>Points Change</th>
-          <th>Change(%)</th>
-          <th>Volume</th>
-          <th>Turnover (Rs. Cr.)</th>
-          <th>P/E</th>
-          <th>P/B</th>
-          <th>Div Yield</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let entry of indexData">
-          <td>{{ entry.IndexName }}</td>
-          <td>{{ entry.IndexDate }}</td>
-          <td>{{ entry.OpenIndexValue }}</td>
-          <td>{{ entry.HighIndexValue }}</td>
-          <td>{{ entry.LowIndexValue }}</td>
-          <td>{{ entry.ClosingIndexValue }}</td>
-          <td>{{ entry.PointsChange }}</td>
-          <td>{{ entry.ChangePercentage }}</td>
-          <td>{{ entry.Volume }}</td>
-          <td>{{ entry.Turnover }}</td>
-          <td>{{ entry.PE }}</td>
-          <td>{{ entry.PB }}</td>
-          <td>{{ entry.DividendYield }}</td>
-        </tr>
-      </tbody>
-    </table>
+<!-- index.component.html -->
+<div class="container">
+  <h2>Index Data</h2>
+  <label for="dateOption">Select Date Option:</label>
+  <select id="dateOption" [(ngModel)]="selectedDateOption" (change)="onDateOptionChange()">
+    <option value="1">Today</option>
+    <option value="2">Specific Date</option>
+    <option value="3">Last N Days</option>
+    <option value="4">Date Range</option>
+    <option value="5">Custom Date Range</option>
+    <option value="6">Yesterday</option>
+  </select>
+
+  <!-- Additional Date Selection Fields -->
+  <div *ngIf="selectedDateOption == '2'">
+    <label for="specificDate">Select Specific Date:</label>
+    <input type="date" id="specificDate" [(ngModel)]="specificDate" (change)="onSpecificDateChange()">
   </div>
-  
+
+  <div *ngIf="selectedDateOption == '3'">
+    <label for="numDays">Last N Days:</label>
+    <input type="number" id="numDays" [(ngModel)]="lastNDays" (change)="onLastNDaysChange()">
+  </div>
+
+  <div *ngIf="selectedDateOption == '4' || selectedDateOption == '5'">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" [(ngModel)]="startDate">
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" [(ngModel)]="endDate">
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="loading-indicator" *ngIf="isLoading">Loading...</div>
+
+  <button (click)="getIndexData()">Get Index Data</button>
+
+  <!-- Filter input for the first column -->
+  <input type="text" [(ngModel)]="filterText" (input)="applyFilter(filterText)" placeholder="Filter" />
+
+  <!-- Table header and body -->
+  <table *ngIf="filteredData.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ staticColumns[0] }}</th>
+        <th>{{ staticColumns[1] }}</th>
+        <th>{{ staticColumns[2] }}</th>
+        <th>{{ staticColumns[3] }}</th>
+        <th>{{ staticColumns[4] }}</th>
+        <th>{{ staticColumns[5] }}</th>
+        <th>{{ staticColumns[6] }}</th>
+        <th>{{ staticColumns[7] }}</th>
+        <th>{{ staticColumns[8] }}</th>
+        <th>{{ staticColumns[9] }}</th>
+        <th>{{ staticColumns[10] }}</th>
+        <th>{{ staticColumns[11] }}</th>
+        <th>{{ staticColumns[12] }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let index of filteredData">
+        <td>{{ index['Index Name'] }}</td>
+        <td>{{ index['Index Date'] }}</td>
+        <td>{{ index['Open Index Value'] }}</td>
+        <td>{{ index['High Index Value'] }}</td>
+        <td>{{ index['Low Index Value'] }}</td>
+        <td>{{ index['Closing Index Value'] }}</td>
+        <td>{{ index['Points Change'] }}</td>
+        <td>{{ index['Change(%)'] }}</td>
+        <td>{{ index['Volume'] }}</td>
+        <td>{{ index['Turnover (Rs. Cr.)'] }}</td>
+        <td>{{ index['P/E'] }}</td>
+        <td>{{ index['P/B'] }}</td>
+        <td>{{ index['Div Yield'] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

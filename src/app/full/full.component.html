@@ -1,0 +1,80 @@
+<div class="data-table">
+  <form>
+    <label for="dateOption">Select Date Option:</label>
+    <select id="dateOption" [(ngModel)]="selectedDateOption" name="selectedDateOption" (change)="onDateOptionChange()">
+      <option value="1">Today</option>
+      <option value="2">Specific Date</option>
+      <option value="3">Last N Days</option>
+      <option value="4">Date Range</option>
+      <!-- <option value="5">Custom Date Range</option> -->
+      <option value="6">Yesterday</option>
+    </select>
+    <button (click)="getFullData()">Get Full Data</button>
+  </form>
+    <!-- Filter input for the first column -->
+<input type="text" [(ngModel)]="filterText" (input)="applyFilter()" placeholder="Filter" />
+
+  <!-- Additional Date Selection Fields -->
+  <div *ngIf="selectedDateOption == '2'">
+    <label for="specificDate">Select Specific Date:</label>
+    <input type="date" id="specificDate" [(ngModel)]="specificDate" (change)="onSpecificDateChange()">
+  </div>
+
+  <div *ngIf="selectedDateOption == '3'">
+    <label for="numDays">Last N Days:</label>
+    <input type="number" id="numDays" [(ngModel)]="lastNDays" (change)="onLastNDaysChange()">
+  </div>
+
+  <div *ngIf="selectedDateOption == '4' || selectedDateOption == '5'">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" [(ngModel)]="startDate">
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" [(ngModel)]="endDate">
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="loading-indicator" *ngIf="isLoading">Loading...</div>
+
+  <div class="table-container">
+    <table>
+      <!-- Table header (you can customize this) -->
+      <thead>
+        <tr>
+          <th>SYMBOL</th>
+          <th>SERIES</th>
+          <th>OPEN_PRICE</th>
+          <th>HIGH_PRICE</th>
+          <th>LOW_PRICE</th>
+          <th>CLOSE_PRICE</th>
+          <th>LAST_PRICE</th>
+          <th>PREV_CLOSE</th>
+          <th>TTL_TRD_QNTY</th>
+          <th>TURNOVER_LACS</th>
+          <th>DATE1</th>
+          <th>NO_OF_TRADES</th>
+          <th>DELIV_QTY</th>
+          <th>DELIV_PER</th>
+        </tr>
+      </thead>
+      <!-- Table body (display data) -->
+      <tbody>
+        <tr *ngFor="let item of fullData">
+          <td>{{ item['SYMBOL'] }}</td>
+          <td>{{ item[' SERIES'] }}</td>
+          <td>{{ item[' OPEN_PRICE'] }}</td>
+          <td>{{ item[' HIGH_PRICE'] }}</td>
+          <td>{{ item[' LOW_PRICE'] }}</td>
+          <td>{{ item[' CLOSE_PRICE'] }}</td>
+          <td>{{ item[' LAST_PRICE'] }}</td>
+          <td>{{ item[' PREV_CLOSE'] }}</td>
+          <td>{{ item[' TTL_TRD_QNTY'] }}</td>
+          <td>{{ item[' TURNOVER_LACS'] }}</td>
+          <td>{{ item[' DATE1'] }}</td>
+          <td>{{ item[' NO_OF_TRADES'] }}</td>
+          <td>{{ item[' DELIV_QTY'] }}</td>
+          <td>{{ item[' DELIV_PER'] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

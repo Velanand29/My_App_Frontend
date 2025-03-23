@@ -1,40 +1,76 @@
-<div class="section">
-    <h2>Stocks Data</h2>
-    <table>
-      <tr>
-        <th>Symbol</th>
-        <th>Series</th>
-        <th>Date</th>
-        <th>Previous Close</th>
-        <th>Open Price</th>
-        <th>High Price</th>
-        <th>Low Price</th>
-        <th>Last Price</th>
-        <th>Close Price</th>
-        <th>Average Price</th>
-        <th>Total Quantity</th>
-        <th>Turnover (Lacs)</th>
-        <th>Number of Trades</th>
-        <th>Delivery Quantity</th>
-        <th>Delivery Percentage</th>
-      </tr>
-      <tr *ngFor="let item of stocksData">
-        <td>{{ item.SYMBOL }}</td>
-        <td>{{ item.SERIES }}</td>
-        <td>{{ item.DATE1 }}</td>
-        <td>{{ item.PREV_CLOSE }}</td>
-        <td>{{ item.OPEN_PRICE }}</td>
-        <td>{{ item.HIGH_PRICE }}</td>
-        <td>{{ item.LOW_PRICE }}</td>
-        <td>{{ item.LAST_PRICE }}</td>
-        <td>{{ item.CLOSE_PRICE }}</td>
-        <td>{{ item.AVG_PRICE }}</td>
-        <td>{{ item.TTL_TRD_QNTY }}</td>
-        <td>{{ item.TURNOVER_LACS }}</td>
-        <td>{{ item.NO_OF_TRADES }}</td>
-        <td>{{ item.DELIV_QTY }}</td>
-        <td>{{ item.DELIV_PER }}</td>
-      </tr>
-    </table>
+<div class="container">
+  <h2>Stock Market Data</h2>
+  <label for="dateOption">Select Date Option:</label>
+  <select id="dateOption" [(ngModel)]="selectedDateOption" (change)="onDateOptionChange()">
+    <option value="1">Today</option>
+    <option value="2">Specific Date</option>
+    <option value="3">Last N Days</option>
+    <option value="4">Date Range</option>
+    <option value="5">Custom Date Range</option>
+    <option value="6">Yesterday</option>
+  </select>
+
+  <!-- Additional Date Selection Fields -->
+  <div *ngIf="selectedDateOption == '2'">
+    <label for="specificDate">Select Specific Date:</label>
+    <input type="date" id="specificDate" [(ngModel)]="specificDate" (change)="onSpecificDateChange()">
   </div>
-  
+
+  <div *ngIf="selectedDateOption == '3'">
+    <label for="numDays">Last N Days:</label>
+    <input type="number" id="numDays" [(ngModel)]="lastNDays" (change)="onLastNDaysChange()">
+  </div>
+
+  <div *ngIf="selectedDateOption == '4'">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" [(ngModel)]="startDate">
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" [(ngModel)]="endDate">
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="loading-indicator" *ngIf="isLoading">Loading...</div>
+
+  <button (click)="getStocksData()">Get Stock Data</button>
+
+  <!-- Filter input for the first column -->
+  <input type="text" [(ngModel)]="filterText" (input)="applyFilter()" placeholder="Filter" />
+
+  <!-- Table header and body -->
+  <table *ngIf="filteredData.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th style="text-align: left;">{{ staticColumns[0] }}</th>
+        <th>{{ staticColumns[1] }}</th>
+        <th>{{ staticColumns[2] }}</th>
+        <th>{{ staticColumns[3] }}</th>
+        <th>{{ staticColumns[4] }}</th>
+        <th>{{ staticColumns[5] }}</th>
+        <th>{{ staticColumns[6] }}</th>
+        <th>{{ staticColumns[7] }}</th>
+        <th>{{ staticColumns[8] }}</th>
+        <th>{{ staticColumns[9] }}</th>
+        <th>{{ staticColumns[10] }}</th>
+        <th>{{ staticColumns[11] }}</th>
+        <th>{{ staticColumns[12] }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of filteredData">
+        <td style="text-align: left;">{{ stock.SYMBOL }}</td>
+        <td>{{ stock.SERIES }}</td>
+        <td>{{ stock.OPEN }}</td>
+        <td>{{ stock.HIGH }}</td>
+        <td>{{ stock.LOW }}</td>
+        <td>{{ stock.CLOSE }}</td>
+        <td>{{ stock.LAST }}</td>
+        <td>{{ stock.PREVCLOSE }}</td>
+        <td>{{ stock.TOTTRDQTY }}</td>
+        <td>{{ stock.TOTTRDVAL }}</td>
+        <td>{{ stock.TIMESTAMP }}</td>
+        <td>{{ stock.TOTALTRADES }}</td>
+        <td>{{ stock.ISIN }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

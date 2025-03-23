@@ -1,43 +1,77 @@
-<div class="data-table">
-    <table>
-      <thead>
-        <tr>
-          <th>INSTRUMENT</th>
-          <th>SYMBOL</th>
-          <th>EXPIRY_DT</th>
-          <th>STRIKE_PR</th>
-          <th>OPTION_TYP</th>
-          <th>OPEN</th>
-          <th>HIGH</th>
-          <th>LOW</th>
-          <th>CLOSE</th>
-          <th>SETTLE_PR</th>
-          <th>CONTRACTS</th>
-          <th>VAL_INLAKH</th>
-          <th>OPEN_INT</th>
-          <th>CHG_IN_OI</th>
-          <th>TIMESTAMP</th>
-        </tr>
-      </thead>
-       <tbody *ngFor="let item of fnoData"> 
-        <tr>
-          <td>{{ item.INSTRUMENT }}</td>
-          <td>{{ item.SYMBOL }}</td>
-          <td>{{ item.EXPIRY_DT }}</td>
-          <td>{{ item.STRIKE_PR }}</td>
-          <td>{{ item.OPTION_TYP }}</td>
-          <td>{{ item.OPEN }}</td>
-          <td>{{ item.HIGH }}</td>
-          <td>{{ item.LOW }}</td>
-          <td>{{ item.CLOSE }}</td>
-          <td>{{ item.SETTLE_PR }}</td>
-          <td>{{ item.CONTRACTS }}</td>
-          <td>{{ item.VAL_INLAKH }}</td>
-          <td>{{ item.OPEN_INT }}</td>
-          <td>{{ item.CHG_IN_OI }}</td>
-          <td>{{ item.TIMESTAMP }}</td>
-        </tr>
-      </tbody> 
-    </table>
+<div class="container">
+  <h2>FNO Data Retrieval</h2>
+  <label for="dateOption">Select Date Option:</label>
+  <select id="dateOption" [(ngModel)]="selectedDateOption" (change)="onDateOptionChange()">
+    <option value="1">Today</option>
+    <option value="2">Specific Date</option>
+    <option value="3">Last N Days</option>
+    <option value="4">Date Range</option>
+    <option value="5">Custom Date Range</option>
+    <option value="6">Yesterday</option>
+  </select>
+
+  <!-- Additional Date Selection Fields -->
+  <div *ngIf="selectedDateOption == '2'">
+    <label for="specificDate">Select Specific Date:</label>
+    <input type="date" id="specificDate" [(ngModel)]="specificDate" (change)="onSpecificDateChange()">
   </div>
-  
+
+  <div *ngIf="selectedDateOption == '3'">
+    <label for="numDays">Last N Days:</label>
+    <input type="number" id="numDays" [(ngModel)]="lastNDays" (change)="onLastNDaysChange()">
+  </div>
+
+  <div *ngIf="selectedDateOption == '4'">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" [(ngModel)]="startDate">
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" [(ngModel)]="endDate">
+  </div>
+
+  <button (click)="getFNOData()">Get FNO Data</button>
+
+  <!-- Filter input for the first column -->
+  <input type="text" [(ngModel)]="filterText" (input)="applyFilter()" placeholder="Filter" />
+
+  <!-- Table header and body -->
+  <table *ngIf="filteredData.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ staticColumns[0] }}</th>
+        <th>{{ staticColumns[1] }}</th>
+        <th>{{ staticColumns[2] }}</th>
+        <th>{{ staticColumns[3] }}</th>
+        <th>{{ staticColumns[4] }}</th>
+        <th>{{ staticColumns[5] }}</th>
+        <th>{{ staticColumns[6] }}</th>
+        <th>{{ staticColumns[7] }}</th>
+        <th>{{ staticColumns[8] }}</th>
+        <th>{{ staticColumns[9] }}</th>
+        <th>{{ staticColumns[10] }}</th>
+        <th>{{ staticColumns[11] }}</th>
+        <th>{{ staticColumns[12] }}</th>
+        <th>{{ staticColumns[13] }}</th>
+        <th>{{ staticColumns[14] }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let fno of filteredData">
+        <td>{{ fno.INSTRUMENT }}</td>
+        <td>{{ fno.SYMBOL }}</td>
+        <td>{{ fno.EXPIRY_DT }}</td>
+        <td>{{ fno.STRIKE_PR }}</td>
+        <td>{{ fno.OPTION_TYP }}</td>
+        <td>{{ fno.OPEN }}</td>
+        <td>{{ fno.HIGH }}</td>
+        <td>{{ fno.LOW }}</td>
+        <td>{{ fno.CLOSE }}</td>
+        <td>{{ fno.SETTLE_PR }}</td>
+        <td>{{ fno.CONTRACTS }}</td>
+        <td>{{ fno.VAL_INLAKH }}</td>
+        <td>{{ fno.OPEN_INT }}</td>
+        <td>{{ fno.CHG_IN_OI }}</td>
+        <td>{{ fno.TIMESTAMP }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
